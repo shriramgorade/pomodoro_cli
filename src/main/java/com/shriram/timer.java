@@ -23,26 +23,21 @@ public class timer{
         }
     }
 
-    public void workTimer(int minutes, int sessions) throws InterruptedException {
-        for(int session = 1; session <= sessions; session++){
+    public void workTimer(int minutes, int session) throws InterruptedException {
             System.out.println("Session: "+ session);
             startTimer(minutes);
             System.out.println("Session completed");
-        }
     }
 
-    public void breakTimer(boolean shortBreak) throws InterruptedException {
-        if(shortBreak == true){
+    public void breakTimer(boolean shortBreak, int shortBreakTime, int longBreakTime) throws InterruptedException {
+        if(shortBreak){
             System.out.println("Short break");
-            startTimer(5);
+            startTimer(shortBreakTime);
         }else{
             System.out.println("Long Break");
-            startTimer(15);
+            startTimer(longBreakTime);
         }
 
         System.out.println("Break completed");
     }
-
-
-
 }
