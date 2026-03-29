@@ -10,9 +10,9 @@ public class handleSessions {
             timer.workTimer(25, session);
 
             if(session % 4 == 0){
-                timer.breakTimer(false);
+                timer.breakTimer(false,5,15);
             }else{
-                timer.breakTimer(true);
+                timer.breakTimer(true,5,15);
             }
 
             session++;
@@ -22,14 +22,14 @@ public class handleSessions {
     }
 
 
-    public void customPomo(int workTime, int shortBreakTime, int longBreakTime, int longBrakeAfter, int sessions) throws InterruptedException {
+    public void customPomo(int workTime, int shortBreakTime, int longBreakTime, int longBreakAfter, int sessions) throws InterruptedException {
         int session = 1;
         timer timer = new timer();
 
         while(session <= sessions){
             timer.workTimer(workTime, session);
 
-            if(session % longBrakeAfter == 0){
+            if(session % longBreakAfter == 0){
                 timer.breakTimer(false, shortBreakTime, longBreakTime);
             }else{
                 timer.breakTimer(true, shortBreakTime, longBreakTime);
