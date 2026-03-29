@@ -1,11 +1,18 @@
 package com.shriram;
 
 import javax.sound.sampled.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.time.LocalDateTime;
 
-public class timer{
+public class Timer {
 
-    public void startTimer(int minutes) throws InterruptedException {
+    public void startTimer(int minutes, String type) throws InterruptedException {
         int totalSeconds = minutes * 60;
+
+        LocalDateTime startLocalTime = LocalDateTime.now(); //start time to be stored in db
+
         for(int countdown = totalSeconds; countdown >= 0; countdown--){
             int min = countdown / 60;
             int sec = countdown % 60;
@@ -34,11 +41,15 @@ public class timer{
 
         //indication of timer completion
         playSound();
+
+        LocalDateTime endLocalDateTime = LocalDateTime.now();  //end time to be stored in db
+        saveSession(startLocalTime,endLocalDateTime,minutes,type);
+
     }
 
     public void workTimer(int minutes, int session) throws InterruptedException {
         System.out.println("Session: "+ session);
-        startTimer(minutes);
+        startTimer(minutes, "WORK");
 
         System.out.println();
         System.out.println("Session completed");
@@ -47,10 +58,10 @@ public class timer{
     public void breakTimer(boolean shortBreak, int shortBreakTime, int longBreakTime) throws InterruptedException {
         if(shortBreak){
             System.out.println("Short break");
-            startTimer(shortBreakTime);
+            startTimer(shortBreakTime,"SHORT_BREAK");
         }else{
             System.out.println("Long Break");
-            startTimer(longBreakTime);
+            startTimer(longBreakTime, "LONG_BREAK");
         }
 
         System.out.println();
@@ -69,6 +80,31 @@ public class timer{
 
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public Connection connect() throws Exception{
+        String url = "jdbc:postgresql://localhost:5432/pomodoro";
+        String username = "postgres";
+        String pass = "your_pass";
+        return DriverManager.getConnection(url,username,pass);
+    }
+
+    public void saveSession(LocalDateTime start, LocalDateTime end, int duration, String type){
+        String query = "insert into sessions(start_time,end_time,duration_minutes,type) values(?,?,?,?)";
+
+        try(Connection conn = connect()){
+            PreparedStatement prepStat = conn.prepareStatement(query);
+
+            prepStat.setObject(1,start);
+            prepStat.setObject(2,end);
+            prepStat.setInt(3,duration);
+            prepStat.setString(4,type);
+
+            prepStat.executeUpdate();
+
+        }catch(Exception e){
+            System.out.println("DB ERROR: "+ e.getMessage());
         }
     }
 }

@@ -1,10 +1,12 @@
 package com.shriram;
 
-public class handleSessions {
+public class HandleSessions {
+
+
 
     public void regularPomo(int sessions) throws InterruptedException {
         int session = 1;
-        timer timer = new timer();
+        Timer timer = new Timer();
 
         while(session <= sessions){
             timer.workTimer(25, session);
@@ -24,7 +26,7 @@ public class handleSessions {
 
     public void customPomo(int workTime, int shortBreakTime, int longBreakTime, int longBreakAfter, int sessions) throws InterruptedException {
         int session = 1;
-        timer timer = new timer();
+        Timer timer = new Timer();
 
         while(session <= sessions){
             timer.workTimer(workTime, session);
